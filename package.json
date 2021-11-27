@@ -1,0 +1,23 @@
+{
+  "name": "hackit-alberta-2021",
+  "version": "1.0.0",
+  "description": "Our entry to HackIT Alberta",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/toastmod/hackit-alberta-2021.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/toastmod/hackit-alberta-2021/issues"
+  },
+  "homepage": "https://github.com/toastmod/hackit-alberta-2021#readme",
+  "dependencies": {
+    "connect": "^3.7.0",
+    "serve-static": "^1.14.1"
+  }
+}
