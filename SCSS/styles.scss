@@ -5,10 +5,22 @@ body {
   color: #fafafa;
   background-color: #272b35;
   font-size: 18px;
-  margin: 0px 3em;
+  margin: 30px 3em;
 }
 
 .button {
   background-color: #4D7FFF;
   border-radius: 5px;
+}
+
+#gameCanvas {
+  height: 100%;
+  // max-width: 200vw;
+}
+
+#help-btn {
+  // right: 10px;
+  position: fixed;
+  right: 15px; 
+  bottom: 15px;
 }
