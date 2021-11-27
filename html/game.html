@@ -23,62 +23,49 @@
         <div class="row">
             <div class="col">
                 <div class="fluid-container">
-                    <div class="row">
+                    <div class="row pb-3">
                         <!-- Status Bar -->
                         <div class="col">
                             <div class="fluid-container">
-                                <div class="row">
+                                <!-- Satus bar above game -->
+                                <div class="row align-items-center">
                                     <!-- Logo -->
                                     <div class="col">
                                         <a href="./intro.html">
-                                            Cannext
-                                            <img src="/imgs/logo.png" width="10%" alt="logo.png">
+                                            <h1>Cannext <img src="/imgs/logo.png" width="10%" alt="logo.png"></h1>
                                         </a>
                                     </div>
 
-                                    <!-- Status bar -->
-                                    <div class="col">
-                                        <!-- Level -->
-                                        <div class="container">
-                                            <div class="row">
-                                                <div class="col">
-                                                    <!-- Level text -->
-                                                    <p>Level <span id="user-level">1</span> Explorer</p>
-                                                </div>
-
-                                                <div class="col">
-                                                    <!-- Level progress bar -->
-                                                    <div class="progress" style="height: 6px;">
-                                                        <div id="user-xp" class="progress-bar bg-secondary"
-                                                            role="progressbar" style="width: 45%;" aria-valuenow="50"
-                                                            aria-valuemin="0" aria-valuemax="100"></div>
-                                                    </div>
-                                                </div>
-
+                                    <!-- Level -->
+                                    <div class="col-5">
+                                        <b>Level <span id="user-level">1</span> Explorer</b>
+                                        <!-- Level progress bar -->
+                                        <div class="progress" style="height: 6px;">
+                                            <div id="user-xp" class="progress-bar bg-secondary" role="progressbar"
+                                                style="width: 45%;" aria-valuenow="50" aria-valuemin="0"
+                                                aria-valuemax="100">
                                             </div>
                                         </div>
+
                                     </div>
 
 
                                     <div class="col">
                                         <!-- Number of coins -->
-                                        <p>
-                                            <img src="/imgs/coinbag.png" alt="pouch of coins">
-                                            <span id="user-coins">120</span>c
-                                        </p>
+                                        <img src="/imgs/coinbag.png" alt="pouch of coins">
+                                        <b><span id="user-coins">120c</span></b>
                                     </div>
 
                                 </div>
 
 
-
                             </div>
                         </div>
 
-                        <!-- Signout and profile -->
+                        <!-- Signout and avatar -->
                         <div class="col-auto">
                             <button id="signout-btn" type="submit" class="btn btn-danger">Sign out</button>
-                            <img src="/imgs/avatar1.png" alt="">
+                            <img class="ms-3" src="/imgs/avatar1.png" alt="">
                         </div>
 
                     </div>

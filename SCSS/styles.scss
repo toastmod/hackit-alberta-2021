@@ -1,5 +1,15 @@
 @import "_colors";
 
+a {
+  text-decoration: none;
+  color: $white;
+
+  &:hover {
+    color: inherit;
+  }
+}
+
+
 .color-bg,
 body {
   color: $white;
@@ -30,6 +40,6 @@ body {
 #help-btn {
   // right: 10px;
   position: fixed;
-  right: 15px; 
+  right: 15px;
   bottom: 15px;
 }
