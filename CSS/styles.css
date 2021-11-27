@@ -9,4 +9,17 @@ body {
   background-color: #4D7FFF;
   border-radius: 5px;
 }
+
+.color-bg,
+body {
+  color: #fafafa;
+  background-color: #272b35;
+  font-size: 18px;
+  margin: 0px 3em;
+}
+
+.button {
+  background-color: #4D7FFF;
+  border-radius: 5px;
+}
 /*# sourceMappingURL=styles.css.map */
