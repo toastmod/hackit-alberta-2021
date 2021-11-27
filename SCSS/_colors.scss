@@ -1,11 +1,8 @@
-.color-bg,
-body {
-    color: #fafafa;
-    background-color: #272b35;
-    font-size: 18px;
-}
+$black: #272b35;
+$gray: #787D87;
+$light-gray: #C4C4C4;
+$white: #fafafa;
 
-.button {
-    background-color: #4D7FFF;
-    border-radius: 5px;
-}
+$blue: #4D7FFF;
+$red: #F83939;
+$red-transparent: rgba(255, 0, 0, 0.5);

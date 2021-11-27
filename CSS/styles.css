@@ -3,18 +3,6 @@ body {
   color: #fafafa;
   background-color: #272b35;
   font-size: 18px;
-}
-
-.button {
-  background-color: #4D7FFF;
-  border-radius: 5px;
-}
-
-.color-bg,
-body {
-  color: #fafafa;
-  background-color: #272b35;
-  font-size: 18px;
   margin: 30px 3em;
 }
 
@@ -24,7 +12,11 @@ body {
 }
 
 #gameCanvas {
-  height: 100%;
+  height: 80vh;
+}
+
+#chatbox img {
+  max-height: 80vh;
 }
 
 #help-btn {
