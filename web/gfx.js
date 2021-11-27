@@ -42,6 +42,12 @@ var player_ent = new Two.Circle(0.0, 0.0, size);
 //   stage.add(entities[i]);
 // }
 
+var action_strings = [
+  "[SPACE]"
+];
+
+var act_text_margin = 26;
+
 stage.add(player_ent);
 player_ent.noStroke().fill = '#00AAFF';
 player_ent.position.set(two.width / 2, two.height / 2);
@@ -51,6 +57,13 @@ player_ent.position.set(two.width / 2, two.height / 2);
 var buildings = [];
 var build_text = [];
 var build_pos = [];
+var build_act_text = [];
+var build_act_func = [
+  function(){
+    console.log("loading game...");
+  }
+];
+
 for (var i = 0; i < 10; i++) {
   var x = Math.random() * map_size[0] * 2 - map_size[0];
   var y = Math.random() * map_size[1] * 2 - map_size[1];
@@ -59,20 +72,42 @@ for (var i = 0; i < 10; i++) {
   buildings[i].noStroke().fill = '#ccc';
   buildings[i].rotation = Math.random() * 180;
 
-  build_text[i] = new Two.Text("JOB CORP.", x,y,{
+  build_text[i] = new Two.Text("Job Corp. #"+i.toString(), x,y,{
     family: "Roboto, 'sans-serif'",
     size: 16,
     leading: 16,
     weight: 5,
   });
+
+  build_act_text[i] = new Two.Text("Press [Space] to enter", x,y-act_text_margin,{
+    family: "Roboto, sans-serif",
+    size: 16,
+    leading: 16,
+    weight: 5,
+  });
+
+  build_act_text.visible = false;
+
   stage.add(buildings[i]);
+  stage.add(build_act_text[i]);
   stage.add(build_text[i]);
 }
 
 // finalize stage
 two.add(stage);
 
+
+// mouse/keyboard logic
+selected = null;
 dragging = false;
+
+$("body").keydown(function(e){
+  if( e.which == 32 ){
+    if( selected != null ){
+      build_act_func[selected]();
+    }
+  }
+});
 
 $("body").mousedown(function(e){
   dragging = true;
@@ -99,6 +134,7 @@ $("body").mousemove(function(e){
 });
 
 
+// update loop
 two.bind('update', function(){
 
   // update player pos on screen
@@ -114,9 +150,19 @@ two.bind('update', function(){
   // TODO: set multiplayer positions
   // for player in registry
       // render
+  var hb_not_found = true;
   for(var i=0; i < buildings.length-1; i++) {
-    if( is_point_in(build_pos[i],[player_ent.position.x, player_ent.position.y],size) ) {
+    if( is_point_in(build_pos[i],[player_ent.position.x, player_ent.position.y],size*5) && hb_not_found) {
       console.log("ENTERING BUILDING");
+      build_act_text[i].visible = true;
+      selected = i;
+      hb_not_found = false;
+    }
+    else{
+      build_act_text[i].visible = false;
+      if(selected == i){
+        selected = null;
+      }
     }
   }
 
