@@ -2,22 +2,31 @@
 
 .color-bg,
 body {
-  color: #fafafa;
-  background-color: #272b35;
+  color: $white;
+  background-color: $black;
   font-size: 18px;
   margin: 30px 3em;
 }
 
 .button {
-  background-color: #4D7FFF;
+  background-color: $blue;
   border-radius: 5px;
 }
 
 #gameCanvas {
-  height: 100%;
+  // min-height: 50vh;
+  height: 80vh;
   // max-width: 200vw;
 }
 
+#chatbox {
+  img {
+    max-height: 80vh;
+  }
+
+}
+
+// FIXED HELP BUTTON AT BOTTOM RIGHT
 #help-btn {
   // right: 10px;
   position: fixed;
