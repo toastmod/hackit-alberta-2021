@@ -33,4 +33,11 @@ body {
   right: 15px;
   bottom: 15px;
 }
+
+.center {
+  margin: auto;
+  width: 50%;
+  border: 3px solid green;
+  padding: 10px;
+}
 /*# sourceMappingURL=styles.css.map */
