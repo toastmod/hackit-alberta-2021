@@ -16,6 +16,7 @@ var two = new Two({
 }).appendTo(document.body);
 
 var stage = new Two.Group();
+stage.fill = 'chartreuse';
 
 var map_size = [1000,1000];
 
@@ -33,20 +34,20 @@ var move_speed = 0.05;
 var m_delta = [0.0,0.0];
 var player_ent = new Two.Circle(0.0, 0.0, size);
 
-for (var i = 0; i < 100; i++) {
-  var x = Math.random() * map_size[0] * 2 - map_size[0];
-  var y = Math.random() * map_size[1] * 2 - map_size[1];
-  entities[i] = new Two.Circle(x, y, size);
-  entities[i].noStroke().fill = '#ccc';
-  stage.add(entities[i]);
-}
+// for (var i = 0; i < 100; i++) {
+//   var x = Math.random() * map_size[0] * 2 - map_size[0];
+//   var y = Math.random() * map_size[1] * 2 - map_size[1];
+//   entities[i] = new Two.Circle(x, y, size);
+//   entities[i].noStroke().fill = '#ccc';
+//   stage.add(entities[i]);
+// }
 
 stage.add(player_ent);
-player_ent.fill = 'red';
+player_ent.noStroke().fill = '#00AAFF';
 player_ent.position.set(two.width / 2, two.height / 2);
 
 // institutions data
-loadcsv("./LMIC_JOBPOST_REPORT.csv");
+// loadcsv("http://sweatercuff.club/LMIC_JOBPOST_REPORT.csv");
 var buildings = [];
 var build_text = [];
 var build_pos = [];
@@ -55,11 +56,11 @@ for (var i = 0; i < 10; i++) {
   var y = Math.random() * map_size[1] * 2 - map_size[1];
   build_pos[i] = [x,y];
   buildings[i] = new Two.Rectangle(x,y,building_size,building_size*1.5);
-  buildings[i].fill = 'orange';
+  buildings[i].noStroke().fill = '#ccc';
   buildings[i].rotation = Math.random() * 180;
 
   build_text[i] = new Two.Text("JOB CORP.", x,y,{
-    family: 'sans-serif',
+    family: "Roboto, 'sans-serif'",
     size: 16,
     leading: 16,
     weight: 5,
