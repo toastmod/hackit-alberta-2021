@@ -4,6 +4,7 @@ body {
   background-color: #272b35;
   font-size: 18px;
   margin: 30px 3em;
+  user-select: none;
 }
 
 .button {
