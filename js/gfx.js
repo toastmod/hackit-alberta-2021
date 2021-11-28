@@ -49,7 +49,7 @@ function startgame() {
   // player(s) data
   var player_pos = [0.0, 0.0];
   var m_anchor = [0.0, 0.0];
-  var entities = [];
+  var entities = {};
   var move_speed = 0.10;
   var m_delta = [0.0, 0.0];
   var player_ent = new Two.Circle(0.0, 0.0, size);
@@ -181,7 +181,21 @@ function startgame() {
      if(uid == null){
        uid = parseInt(event.data.replaceAll("ID",""));
      }
-   }
+   }else{
+      var pos = event.data.split('|');
+      pos[0] = parseInt(pos[0]);
+      pos[1] = parseInt(pos[1]);
+      pos[2] = parseInt(pos[2]);
+      if (uid != pos[0]){
+        if (entities[pos[0]] == null) {
+          entities[pos[0]] = new Two.Circle(pos[1], pos[2], size);
+          entities[pos[0]].noStroke().fill = 'orange';
+          stage.add(entities[pos[0]]);
+        } else {
+          entities[pos[0]].position.set(pos[1], pos[2]);
+        }
+      }
+    }
   });
 
   // update loop
@@ -194,7 +208,7 @@ function startgame() {
     player_ent.position.set(player_pos[0] + (two.width / 2), player_pos[1] + (two.height / 2));
 
     if(uid != null){
-      socket.send("P|"+player_pos[0].toString())
+      socket.send(uid.toString()+"|"+Math.round(player_pos[0] + (two.width / 2)).toString()+"|"+Math.round(player_pos[1]+(two.height / 2)).toString());
     }
     // camera movement
     stage.translation.x += m_delta[0] * move_speed;
