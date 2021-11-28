@@ -17,7 +17,12 @@ var two = new Two({
   autostart: true
 }).appendTo(canv);
 
+// players stage
 var stage = new Two.Group();
+var fires = new Two.Group();
+var texts = new Two.Group();
+var bkgd = new Two.Group();
+
 var uid = null;
 
 function startgame() {
@@ -35,7 +40,7 @@ function startgame() {
     leading: 16,
     weight: 5,
   });
-  var fire_act_text = new Two.Text("Press [Space] to join", 0.0, 0.0, {
+  var fire_act_text = new Two.Text("Press [F] to join", 0.0, 0.0, {
     family: "Roboto, 'sans-serif'",
     size: 16,
     leading: 16,
@@ -44,7 +49,7 @@ function startgame() {
   fire_act_text.visible = false;
   fire_ent.visible = false;
   fire_text.visible = false;
-  stage.add(fire_ent);
+  fires.add(fire_ent);
 
   // player(s) data
   var player_pos = [0.0, 0.0];
@@ -63,7 +68,7 @@ function startgame() {
   // }
 
   var action_strings = [
-    "[SPACE]"
+    "[F]"
   ];
 
   var act_text_margin = 26;
@@ -74,10 +79,10 @@ function startgame() {
 
   // bonfires data
   // loadcsv("http://sweatercuff.club/LMIC_JOBPOST_REPORT.csv");
-  var buildings = [];
-  var build_text = [];
-  var build_pos = [];
-  var build_act_text = [];
+  var buildings = {};
+  var build_text = {};
+  var build_pos = {};
+  var build_act_text = {};
   var build_act_func = [
     function () {
       console.log("loading game...");
@@ -117,9 +122,11 @@ function startgame() {
   stage.add(fire_text);
   stage.add(fire_act_text);
 
-  // finalize stage
+  // finalize stage orders
+  two.add(bkgd);
+  two.add(fires);
   two.add(stage);
-
+  two.add(texts);
   // mouse/keyboard logic
   type_selected = null;
   selected = null;
@@ -129,7 +136,7 @@ function startgame() {
   $("body").keydown(function (e) {
     console.log(e.which);
     // SPACE
-    if (e.which == 32) {
+    if (e.which == 70) {
       if (type_selected != null) {
         // buildings = 0
         if (type_selected == 0) {
@@ -142,6 +149,7 @@ function startgame() {
       fire_text.value = prompt("Enter campfire name", "New Project");
       fire_text.position.set(player_ent.position.x, player_ent.position.y);
       fire_ent.position.set(player_ent.position.x, player_ent.position.y);
+      socket.send("F|"+uid+"|"+fire_text.value+"|"+fire_ent.position.x.toString()+"|"+fire_ent.position.y.toString());
       fire_ent.visible = true;
       fire_text.visible = true;
     }
@@ -149,7 +157,7 @@ function startgame() {
 
   $("body").mousedown(function (e) {
     dragging = true;
-    m_anchor = [e.pageX, e.pageY];
+    m_anchor = [two.width/2, two.height/2];
   });
 
   $("body").mouseup(function () {
@@ -173,14 +181,52 @@ function startgame() {
 
   const socket = new WebSocket('ws://vastful.ca/echo');
   socket.addEventListener('open', function (event) {
-    socket.send('Hello Server!');
+    // socket.send('Hello Server!');
   });
 
   socket.addEventListener('message', function (event) {
    if(event.data[0]+event.data[1] == "ID"){
-     if(uid == null){
-       uid = parseInt(event.data.replaceAll("ID",""));
+     if (uid == null) {
+       uid = parseInt(event.data.replaceAll("ID", ""));
      }
+   } else if (event.data[0] == 'F') {
+     // bonfire serial: 
+     // uid,value,x,y
+     var dat = event.data.replace("F|", "").split('|');
+     dat[0] = parseInt(dat[0]); // uid
+     dat[2] = parseInt(dat[2]); // x
+     dat[3] = parseInt(dat[3]); // y
+     if (dat[0] != uid) {
+       if (buildings[dat[0]] == null) {
+        buildings[dat[0]] = new Two.Circle(dat[2], dat[3], fire_size);
+        build_pos[dat[0]] = [dat[2],dat[3]];
+        build_text[dat[0]] = new Two.Text(dat[1], dat[2], dat[3], {
+           family: "Roboto, 'sans-serif'",
+           size: 16,
+           leading: 16,
+           weight: 5,
+         });
+         build_act_text[dat[0]] = new Two.Text("Press [F] to join", dat[2], dat[3]+act_text_margin, {
+           family: "Roboto, 'sans-serif'",
+           size: 16,
+           leading: 16,
+           weight: 5,
+         });
+         build_act_text[dat[0]].visible = false;
+         buildings[dat[0]].visible = true;
+         build_text[dat[0]].visible = true;
+         fires.add(buildings[dat[0]]);
+         texts.add(build_text[dat[0]]);
+         texts.add(build_act_text[dat[0]]);
+       } else {
+         build_text[dat[0]].value = dat[1];
+         build_pos[dat[0]] = [dat[2],dat[3]];
+         buildings[dat[0]].position.set(dat[2],dat[3]);
+         build_text[dat[0]].position.set(dat[2],dat[3]);
+         build_act_text[dat[0]].position.set(dat[2]+act_text_margin, dat[3]+act_text_margin);
+       }
+     }
+
    }else{
       var pos = event.data.split('|');
       pos[0] = parseInt(pos[0]);
@@ -198,6 +244,8 @@ function startgame() {
     }
   });
 
+  var stage_move = [0.0,0.0];
+
   // update loop
   two.bind('update', function () {
 
@@ -207,12 +255,25 @@ function startgame() {
     player_pos[1] -= m_delta[1] * move_speed;
     player_ent.position.set(player_pos[0] + (two.width / 2), player_pos[1] + (two.height / 2));
 
-    if(uid != null){
+    if((uid != null) && dragging){
       socket.send(uid.toString()+"|"+Math.round(player_pos[0] + (two.width / 2)).toString()+"|"+Math.round(player_pos[1]+(two.height / 2)).toString());
     }
     // camera movement
-    stage.translation.x += m_delta[0] * move_speed;
-    stage.translation.y += m_delta[1] * move_speed;
+    stage_move[0] = m_delta[0] * move_speed;
+    stage_move[1] = m_delta[1] * move_speed;
+
+    stage.translation.x += stage_move[0];
+    stage.translation.y += stage_move[1];
+
+    fires.translation.x += stage_move[0];
+    fires.translation.y += stage_move[1];
+
+    texts.translation.x += stage_move[0];
+    texts.translation.y += stage_move[1];
+
+    bkgd.translation.x += stage_move[0];
+    bkgd.translation.y += stage_move[1];
+
 
     // TODO: set multiplayer positions
     // for player in registry
@@ -228,7 +289,7 @@ function startgame() {
       fire_act_text.visible = false;
     }
 
-    for (var i = 0; i < buildings.length - 1; i++) {
+    for (var [i,val] of Object.entries(buildings)) {
       if (is_point_in(build_pos[i], [player_ent.position.x, player_ent.position.y], size * 5) && hb_not_found) {
         console.log("ENTERING BUILDING");
         build_act_text[i].visible = true;
@@ -253,6 +314,6 @@ var texrec = new Two.Texture("/imgs/grass.png", function () {
   var tex_ent = two.makeRectangle(0, 0, two.width*10, two.height*10);
   texrec.repeat = 'repeat';
   tex_ent.noStroke().fill = texrec;
-  stage.add(tex_ent);
+  bkgd.add(tex_ent);
   startgame();
 });
